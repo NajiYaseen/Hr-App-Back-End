@@ -1,46 +1,34 @@
 package com.hr.entity;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.OnDelete;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "leave")
 public class Leave {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "leave_id")
 	private Long leaveID;
 	@Column(name = "leave_from")
 	private Date leaveFrom;
 	@Column(name = "leave_to")
-	private String leaveTo;
+	private Date leaveTo;
 	@Column(name = "number_of_days")
 	private int numberOfDays;
 	@Column(name = "note")
 	private String note;
-	@Column(name = "typeid")
-	private Long typeId;
 
 	@JsonBackReference
 	@ManyToOne
@@ -56,7 +44,7 @@ public class Leave {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Leave(Long leaveID, Date leaveFrom, String leaveTo, int numberOfDays, String note, Employee employee,
+	public Leave(Long leaveID, Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee,
 			LeaveType type) {
 		super();
 		this.leaveID = leaveID;
@@ -68,7 +56,7 @@ public class Leave {
 		this.type = type;
 	}
 
-	public Leave(Date leaveFrom, String leaveTo, int numberOfDays, String note, Employee employee, LeaveType type) {
+	public Leave(Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee, LeaveType type) {
 		super();
 		this.leaveFrom = leaveFrom;
 		this.leaveTo = leaveTo;
@@ -78,30 +66,13 @@ public class Leave {
 		this.type = type;
 	}
 
-	public Leave(Date leaveFrom, String leaveTo, int numberOfDays, String note, Employee employee) {
+	public Leave(Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee) {
 		super();
 		this.leaveFrom = leaveFrom;
 		this.leaveTo = leaveTo;
 		this.numberOfDays = numberOfDays;
 		this.note = note;
 		this.employee = employee;
-	}
-
-	public Leave(Date leaveFrom, String leaveTo, int numberOfDays, String note) {
-		super();
-		this.leaveFrom = leaveFrom;
-		this.leaveTo = leaveTo;
-		this.numberOfDays = numberOfDays;
-		this.note = note;
-	}
-
-	public Leave(Date leaveFrom, String leaveTo, int numberOfDays, String note, Long typeId) {
-		super();
-		this.leaveFrom = leaveFrom;
-		this.leaveTo = leaveTo;
-		this.numberOfDays = numberOfDays;
-		this.note = note;
-		this.typeId = typeId;
 	}
 
 	public Long getLeaveID() {
@@ -120,11 +91,11 @@ public class Leave {
 		this.leaveFrom = leaveFrom;
 	}
 
-	public String getLeaveTo() {
+	public Date getLeaveTo() {
 		return leaveTo;
 	}
 
-	public void setLeaveTo(String leaveTo) {
+	public void setLeaveTo(Date leaveTo) {
 		this.leaveTo = leaveTo;
 	}
 
@@ -158,14 +129,6 @@ public class Leave {
 
 	public void setType(LeaveType type) {
 		this.type = type;
-	}
-
-	public Long getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(Long typeId) {
-		this.typeId = typeId;
 	}
 
 }

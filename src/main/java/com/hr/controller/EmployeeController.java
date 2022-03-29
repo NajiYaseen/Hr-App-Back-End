@@ -14,14 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hr.dtos.EmployeeDto;
 import com.hr.entity.Employee;
 import com.hr.entity.ExpenseClaim;
 import com.hr.entity.Leave;
-import com.hr.mappers.EmployeeMapper;
 import com.hr.model.ResponseModel;
 import com.hr.model.SuccessFail;
 import com.hr.repository.EmployeeRepository;
@@ -103,7 +100,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<ResponseModel> getEmployees(@RequestParam(required = false) Long id) throws Exception {
+	public ResponseEntity<ResponseModel> getEmployees() throws Exception {
 		List<Employee> employees;
 		String errorMSG = "";
 		String statusCode = SuccessFail.FAIL;
@@ -116,9 +113,8 @@ public class EmployeeController {
 
 				for (Employee employee : employees) {
 					List<Leave> leave = this.leaveRepository.findByEmployee(employee);
+					
 					List<ExpenseClaim> expenseClaims = this.expenseRepository.findByEmployee(employee);
-//					employee.setLeave(leave);
-//					employee.setClaims(expenseClaims);
 
 				}
 				statusCode = SuccessFail.SUCCESS;
@@ -143,7 +139,7 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{id}")
-	public void deleteGroupModule(@PathVariable Long id) throws Exception {
+	public void deleteEmployee(@PathVariable Long id) throws Exception {
 		Optional<Employee> employee = employeeRepository.findById(id);
 		if (employee.isPresent()) {
 			this.employeeRepository.deleteById(id);

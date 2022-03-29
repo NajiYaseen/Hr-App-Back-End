@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,18 +46,18 @@ public class LeaveController {
 		Object data = null;
 		HttpStatus httpStatus;
 		Leave leave = null;
-//		String from = leaveBody.getFrom();
-//		String to = leaveBody.getTo();
-//		Long fromDate = new Date(from).getTime();
-//		Long toDate = new Date(to).getTime();
-//
-//		Long timeDiff = toDate - fromDate;
-//		int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));
+		Date from = leaveBody.getLeaveFrom();
+		Date to = leaveBody.getLeaveTo();
+		Long fromDate = from.getTime();
+		Long toDate = to.getTime();
+
+		Long timeDiff = toDate - fromDate;
+		int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));
 
 		try {
 			if (leaveBody != null) {
 				Employee defaultEmployee = this.employeeRepository.findById(id).get();
-				leave = new Leave(leaveBody.getLeaveFrom(), leaveBody.getLeaveTo(), 20, leaveBody.getNote(),
+				leave = new Leave(leaveBody.getLeaveFrom(), leaveBody.getLeaveTo(), daysDiff, leaveBody.getNote(),
 						defaultEmployee);
 				leave = this.leaveRepository.save(leave);
 				statusCode = SuccessFail.SUCCESS;
@@ -113,15 +114,14 @@ public class LeaveController {
 
 	@GetMapping("/")
 	public ResponseEntity<ResponseModel> getLeavesForEmployee(@RequestParam(name = "id", required = false) Long id,
-			@RequestParam(name = "from", required = false) Date from,
-			@RequestParam(name = "to", required = false) Date to) throws Exception {
+			@RequestParam(name = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to)
+			throws Exception {
 		List<Leave> leaves = null;
 		String errorMSG = "";
 		String statusCode = SuccessFail.FAIL;
 		Object data = null;
 		HttpStatus httpStatus;
-//		Long fromDate = new Date(from).getTime();
-//		Long toDate = new Date(to).getTime();
 
 		try {
 
@@ -139,7 +139,7 @@ public class LeaveController {
 				httpStatus = HttpStatus.OK;
 				errorMSG = "";
 				data = leaves;
-			} else if (id != null && ((from == null || from.equals("")) && (to == null || from.equals("")))) {
+			} else if (id != null && (from == null && to == null)) {
 				Employee employee = this.employeeRepository.findById(id).get();
 				leaves = this.leaveRepository.findByEmployee(employee);
 				statusCode = SuccessFail.SUCCESS;
@@ -154,21 +154,6 @@ public class LeaveController {
 				data = leaves;
 			}
 
-			// Employee employee = this.employeeRepository.findById(id).get();
-
-//			leaves = leaveRepository.findByEmployee(employee);
-//			for (Leave leave : leaves) {
-//				LeaveType leaveType = this.leaveTypeRepository.findById(leave.getLeaveID()).get();
-////				leave.setLeaveType(leaveType);
-//
-
-			// }
-
-//			statusCode = SuccessFail.SUCCESS;
-//			httpStatus = HttpStatus.OK;
-//			errorMSG = "";
-//			data = leaves;
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -180,39 +165,6 @@ public class LeaveController {
 		return new ResponseEntity<ResponseModel>(responseModel, httpStatus);
 
 	}
-
-//	@GetMapping("/")
-//	public ResponseEntity<ResponseModel> getLeaves(@RequestParam String from, @RequestParam String to)
-//			throws Exception {
-//		List<Leave> leave;
-//		Long fromDate = new Date(from).getTime();
-//		Long toDate = new Date(to).getTime();
-//		String errorMSG = "";
-//		String statusCode = SuccessFail.FAIL;
-//		Object data = null;
-//		HttpStatus httpStatus;
-//		try {
-//			leave = leaveRepository.findByLeaveFromBetween(fromDate, toDate);
-//
-//			statusCode = SuccessFail.SUCCESS;
-//			httpStatus = HttpStatus.OK;
-//			errorMSG = "";
-//			data = leave;
-////		else {
-////			httpStatus = HttpStatus.EXPECTATION_FAILED;
-////			statusCode = SuccessFail.FAIL;
-////				errorMSG = ("List is Empty");
-////			}
-//		} catch (Exception e) {
-//			httpStatus = HttpStatus.EXPECTATION_FAILED;
-//			statusCode = SuccessFail.FAIL;
-//			errorMSG = e.getMessage();
-//		}
-//
-//		ResponseModel responseModel = new ResponseModel(data, statusCode, errorMSG);
-//		return new ResponseEntity<ResponseModel>(responseModel, httpStatus);
-//
-//	}
 
 	@DeleteMapping("/{id}")
 	public void deleteLeaves(@PathVariable Long id) throws Exception {

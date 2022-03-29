@@ -1,8 +1,7 @@
 package com.hr.entity;
 
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,17 +16,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Table(name = "expense_claim")
+@Table(name = "expenseClaim")
 @Entity
 public class ExpenseClaim {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "expense_id")
-	private Long expenseID;
+	private Long expenseId;
 	@Column(name = "date")
-	private Long date;
+	private Date date;
 	@Column(name = "description")
 	private String description;
 	@Column(name = "total")
@@ -37,50 +35,54 @@ public class ExpenseClaim {
 
 	@ManyToOne
 	@JsonBackReference
-	@JoinColumn(name = "emplyee_id")
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
-//
-//	@OneToMany(mappedBy = "ExpenseClaim", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ExpenseClaimDetail.class)
-//	private List<ExpenseClaimDetail> expenseClaimDetail;
+
+	@OneToMany(mappedBy = "expenseClaim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<ExpenseClaimDetail> expenseClaimDetail;
 
 	public ExpenseClaim() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ExpenseClaim(Long expenseID, Long date, String description, Long total, String status, Employee employee,
+	public ExpenseClaim(Long expenseId, Date date, String description, Long total, String status, Employee employee,
 			List<ExpenseClaimDetail> expenseClaimDetail) {
 		super();
-		this.expenseID = expenseID;
+		this.expenseId = expenseId;
 		this.date = date;
 		this.description = description;
 		this.total = total;
 		this.status = status;
 		this.employee = employee;
+		this.expenseClaimDetail = expenseClaimDetail;
 	}
 
-	public ExpenseClaim(Long date, String description, Long total, String status, Employee employee) {
+	public ExpenseClaim(Date date, String description, Long total, String status, Employee employee,
+			List<ExpenseClaimDetail> expenseClaimDetail) {
 		super();
 		this.date = date;
 		this.description = description;
 		this.total = total;
 		this.status = status;
 		this.employee = employee;
+		this.expenseClaimDetail = expenseClaimDetail;
+
 	}
 
-	public Long getExpenseID() {
-		return expenseID;
+	public Long getExpenseId() {
+		return expenseId;
 	}
 
-	public void setExpenseID(Long expenseID) {
-		this.expenseID = expenseID;
+	public void setExpenseId(Long expenseId) {
+		this.expenseId = expenseId;
 	}
 
-	public Long getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setLong(Long date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -116,8 +118,12 @@ public class ExpenseClaim {
 		this.employee = employee;
 	}
 
-	public void setDate(Long date) {
-		this.date = date;
+	public List<ExpenseClaimDetail> getExpenseClaimDetail() {
+		return expenseClaimDetail;
+	}
+
+	public void setExpenseClaimDetail(List<ExpenseClaimDetail> expenseClaimDetail) {
+		this.expenseClaimDetail = expenseClaimDetail;
 	}
 
 }
