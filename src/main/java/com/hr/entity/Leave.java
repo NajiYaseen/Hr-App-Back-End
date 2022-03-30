@@ -29,6 +29,8 @@ public class Leave {
 	private int numberOfDays;
 	@Column(name = "note")
 	private String note;
+	@Column(name = "leaveType")
+	private String leaveType;
 
 	@JsonBackReference
 	@ManyToOne
@@ -44,34 +46,38 @@ public class Leave {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Leave(Long leaveID, Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee,
-			LeaveType type) {
+	public Leave(Long leaveID, Date leaveFrom, Date leaveTo, int numberOfDays, String note, String leaveType,
+			Employee employee, LeaveType type) {
 		super();
 		this.leaveID = leaveID;
 		this.leaveFrom = leaveFrom;
 		this.leaveTo = leaveTo;
 		this.numberOfDays = numberOfDays;
 		this.note = note;
+		this.leaveType = leaveType;
 		this.employee = employee;
 		this.type = type;
 	}
 
-	public Leave(Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee, LeaveType type) {
+	public Leave(Long leaveID, Date leaveFrom, Date leaveTo, int numberOfDays, String note, String leaveType,
+			Employee employee) {
+		super();
+		this.leaveID = leaveID;
+		this.leaveFrom = leaveFrom;
+		this.leaveTo = leaveTo;
+		this.numberOfDays = numberOfDays;
+		this.note = note;
+		this.leaveType = leaveType;
+		this.employee = employee;
+	}
+
+	public Leave(Date leaveFrom, Date leaveTo, int numberOfDays, String note, String leaveType, Employee employee) {
 		super();
 		this.leaveFrom = leaveFrom;
 		this.leaveTo = leaveTo;
 		this.numberOfDays = numberOfDays;
 		this.note = note;
-		this.employee = employee;
-		this.type = type;
-	}
-
-	public Leave(Date leaveFrom, Date leaveTo, int numberOfDays, String note, Employee employee) {
-		super();
-		this.leaveFrom = leaveFrom;
-		this.leaveTo = leaveTo;
-		this.numberOfDays = numberOfDays;
-		this.note = note;
+		this.leaveType = leaveType;
 		this.employee = employee;
 	}
 
@@ -129,6 +135,14 @@ public class Leave {
 
 	public void setType(LeaveType type) {
 		this.type = type;
+	}
+
+	public String getLeaveType() {
+		return leaveType;
+	}
+
+	public void setLeaveType(String leaveType) {
+		this.leaveType = leaveType;
 	}
 
 }

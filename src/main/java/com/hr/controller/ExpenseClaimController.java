@@ -44,15 +44,30 @@ public class ExpenseClaimController {
 		Object data = null;
 		HttpStatus httpStatus;
 		List<ExpenseClaimDetail> claimDetail = null;
+		Long total = 0L;
 		try {
 
 			Employee employee = this.employeeRepository.findById(id).get();
 
 			if ((expenseClaim != null)) {
 				expenseClaim = new ExpenseClaim(expenseClaim.getExpenseId(), expenseClaim.getDate(),
-						expenseClaim.getDescription(), expenseClaim.getTotal(), expenseClaim.getStatus(), employee,
-						null);
+						expenseClaim.getDescription(), total, expenseClaim.getStatus(), employee, null);
 				expenseClaim = this.expenseRepository.save(expenseClaim);
+
+//				List<ExpenseClaimDetail> expenseClaimsDetails = this.expenseDetailRepository
+//						.findByexpenseClaim(expenseClaim);
+//				total = 0L;
+//				System.out.println(expenseClaimsDetails.size());
+//
+//				for (int i = 0; i < expenseClaimsDetails.size(); i++) {
+//					total = total + expenseClaimsDetails.get(i).getTotal();
+//					System.out.println(total);
+//
+//				}
+//				expenseClaim.setTotal(total);
+//				System.out.println("after "+total);
+//				expenseClaim = this.expenseRepository.save(expenseClaim);
+
 				statusCode = SuccessFail.SUCCESS;
 				httpStatus = HttpStatus.OK;
 				errorMSG = "";
@@ -80,13 +95,12 @@ public class ExpenseClaimController {
 		String statusCode = SuccessFail.FAIL;
 		Object data = null;
 		HttpStatus httpStatus;
-		Optional<Employee> employee1;
 		ExpenseClaim expenseClaim1;
 		try {
-			Employee employee = this.employeeRepository.findById(id).get();
+			expenseClaim1 = this.expenseRepository.findById(id).get();
 			if ((expenseClaim != null)) {
 				expenseClaim1 = new ExpenseClaim(id, expenseClaim.getDate(), expenseClaim.getDescription(),
-						expenseClaim.getTotal(), expenseClaim.getStatus(), employee,
+						expenseClaim.getTotal(), expenseClaim.getStatus(), expenseClaim1.getEmployee(),
 						expenseClaim.getExpenseClaimDetail());
 				expenseClaim1 = this.expenseRepository.save(expenseClaim1);
 				statusCode = SuccessFail.SUCCESS;
@@ -160,12 +174,13 @@ public class ExpenseClaimController {
 
 					List<ExpenseClaimDetail> expenseClaimsDetails = this.expenseDetailRepository
 							.findByexpenseClaim(expenseClaim);
+					total = 0L;
 					for (int i = 0; i < expenseClaimsDetails.size(); i++) {
 						total = total + expenseClaimsDetails.get(i).getTotal();
-						expenseClaim.setTotal(total);
-						expenseClaim = this.expenseRepository.save(expenseClaim);
-					}
 
+					}
+					expenseClaim.setTotal(total);
+					expenseClaim = this.expenseRepository.save(expenseClaim);
 				}
 				statusCode = SuccessFail.SUCCESS;
 				httpStatus = HttpStatus.OK;

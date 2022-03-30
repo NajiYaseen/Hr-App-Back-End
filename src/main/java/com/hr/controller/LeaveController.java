@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,7 +59,7 @@ public class LeaveController {
 			if (leaveBody != null) {
 				Employee defaultEmployee = this.employeeRepository.findById(id).get();
 				leave = new Leave(leaveBody.getLeaveFrom(), leaveBody.getLeaveTo(), daysDiff, leaveBody.getNote(),
-						defaultEmployee);
+						leaveBody.getLeaveType(), defaultEmployee);
 				leave = this.leaveRepository.save(leave);
 				statusCode = SuccessFail.SUCCESS;
 				httpStatus = HttpStatus.OK;
@@ -72,6 +73,47 @@ public class LeaveController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			statusCode = SuccessFail.FAIL;
+			errorMSG = e.getMessage();
+		}
+
+		ResponseModel responseModel = new ResponseModel(data, statusCode, errorMSG);
+		return new ResponseEntity<ResponseModel>(responseModel, httpStatus);
+
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ResponseModel> updatexpense(@PathVariable long id, @RequestBody Leave leave)
+			throws Exception {
+		String errorMSG = "";
+		String statusCode = SuccessFail.FAIL;
+		Object data = null;
+		HttpStatus httpStatus;
+		Date from = leave.getLeaveFrom();
+		Date to = leave.getLeaveTo();
+		Long fromDate = from.getTime();
+		Long toDate = to.getTime();
+
+		Long timeDiff = toDate - fromDate;
+		int daysDiff = (int) (timeDiff / (1000 * 60 * 60 * 24));
+		Leave leave1;
+		try {
+			Employee defaultEmployee = this.employeeRepository.findById(id).get();
+			if ((leave != null)) {
+				leave1 = new Leave(id, leave.getLeaveFrom(), leave.getLeaveTo(), daysDiff, leave.getNote(),
+						leave.getLeaveType(), defaultEmployee);
+				leave1 = this.leaveRepository.save(leave1);
+				statusCode = SuccessFail.SUCCESS;
+				httpStatus = HttpStatus.OK;
+				errorMSG = "";
+				data = leave1;
+			} else {
+				httpStatus = HttpStatus.EXPECTATION_FAILED;
+				statusCode = SuccessFail.FAIL;
+				errorMSG = "check all field,  make sure that you entered all the parameters";
+			}
+		} catch (Exception e) {
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			statusCode = SuccessFail.FAIL;
 			errorMSG = e.getMessage();
@@ -98,9 +140,7 @@ public class LeaveController {
 			httpStatus = HttpStatus.OK;
 			errorMSG = "";
 
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			statusCode = SuccessFail.FAIL;
@@ -172,7 +212,7 @@ public class LeaveController {
 		if (leave.isPresent()) {
 			this.leaveRepository.deleteById(id);
 		} else {
-			throw new Exception("employee not found");
+			throw new Exception("Leave not found");
 		}
 	}
 }

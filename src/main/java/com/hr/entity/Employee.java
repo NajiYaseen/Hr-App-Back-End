@@ -28,6 +28,7 @@ public class Employee {
 	@Column(name = "department_id")
 	private String departmentId;
 
+	
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Leave.class)
 	private List<Leave> leave;
 

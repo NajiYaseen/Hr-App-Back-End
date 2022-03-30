@@ -12,17 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "type")
 public class LeaveType {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "leave_type_id")
-	private Long leaveTypeId;
-
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "typeId")
+	private Long Id;
 	@Column(name = "select_leave_type")
 	private String selectLeaveType;
-
+	
 	@OneToMany(mappedBy = "type", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Leave.class)
 	private List<Leave> leave;
 
@@ -31,25 +32,25 @@ public class LeaveType {
 		// TODO Auto-generated constructor stub
 	}
 
-	public LeaveType(Long leaveTypeId, String selectLeaveType, List<Leave> leave) {
+	public LeaveType(Long id, String selectLeaveType, List<Leave> leave) {
 		super();
-		this.leaveTypeId = leaveTypeId;
+		Id = id;
 		this.selectLeaveType = selectLeaveType;
 		this.leave = leave;
 	}
 
-	public LeaveType(Long leaveTypeId, String selectLeaveType) {
+	public LeaveType(String selectLeaveType, List<Leave> leave) {
 		super();
-		this.leaveTypeId = leaveTypeId;
 		this.selectLeaveType = selectLeaveType;
+		this.leave = leave;
 	}
 
-	public Long getLeaveTypeId() {
-		return leaveTypeId;
+	public Long getId() {
+		return Id;
 	}
 
-	public void setLeaveTypeId(Long leaveTypeId) {
-		this.leaveTypeId = leaveTypeId;
+	public void setId(Long id) {
+		Id = id;
 	}
 
 	public String getSelectLeaveType() {
@@ -60,11 +61,11 @@ public class LeaveType {
 		this.selectLeaveType = selectLeaveType;
 	}
 
-	public List<Leave> getLeaves() {
+	public List<Leave> getLeave() {
 		return leave;
 	}
 
-	public void setLeaves(List<Leave> leave) {
+	public void setLeave(List<Leave> leave) {
 		this.leave = leave;
 	}
 

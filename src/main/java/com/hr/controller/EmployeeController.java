@@ -113,7 +113,7 @@ public class EmployeeController {
 
 				for (Employee employee : employees) {
 					List<Leave> leave = this.leaveRepository.findByEmployee(employee);
-					
+
 					List<ExpenseClaim> expenseClaims = this.expenseRepository.findByEmployee(employee);
 
 				}
@@ -123,7 +123,7 @@ public class EmployeeController {
 				data = employees;
 
 			} else {
-				httpStatus = HttpStatus.EXPECTATION_FAILED;
+				httpStatus = HttpStatus.ACCEPTED;
 				statusCode = SuccessFail.FAIL;
 				errorMSG = ("List is Empty");
 			}
